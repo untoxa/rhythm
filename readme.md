@@ -17,17 +17,16 @@ into:
 	-g .OAM=0xC000
 
 ## Music
-The Music module was written by @Kabcorp. 
+The Music module was written by @Kabcorp. He also did some graphics. Thank you!
 
 He used this version of hUGETracker: https://github.com/untoxa/hUGEBuild/releases/tag/0.41b1
 
 Original author of hUGETracker is @superdisk, here is a link to the original repo: https://github.com/superDisk/hUGETracker/
 
 Module was converted into the C source by this wonderful online tool from @Daid: https://daid.github.io/rgbds-live/tracker/index.html
-It is "Online hUGETracker", actually!
+It is almost "Online hUGETracker"!
 
 ## Interaction with the game
-hUgeDriver has a feature, called "routines". It is actually a user code, that is called when the special effect is encountered. There is a simple way to obtain those calls in your C handlers.
-
+hUgeDriver has a feature, that is called "routines". It is actually a user code, that is called when the special effect is encountered. There is a simple way to obtain those calls in your C handlers: just declare those handlers and put them into the routines pointer array. Look into the source code to find out how to implement that in your own software.
 
 Tony.
