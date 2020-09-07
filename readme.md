@@ -9,8 +9,11 @@ This game is actually a hUGEDriver demo
 You need the latest version of GBDK-2020 (3.2 for now) and a latest version of SDCC to compile this example. Latest SDCC may be found here: http://sdcc.sourceforge.net/snap.php I suggest at least #11845
 
 Also you may need some changes to the @make.bat, because the version of GBDK I'm currently using is slightly different. If you get errors on the linking stage, change:
+
 	-g _shadow_OAM=0xC000 
+
 into:
+
 	-g .OAM=0xC000
 
 ## Music
