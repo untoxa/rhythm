@@ -1,4 +1,4 @@
-# Simple (not simple to play) rythm game for Nintendo Game Boy
+# Simple (not simple to play) rhythm game for Nintendo Game Boy
 
 This game is actually a hUGEDriver demo
 
