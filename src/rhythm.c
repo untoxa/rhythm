@@ -14,10 +14,12 @@
 #define SPR_OK_IDX (0x20 + 16)
 #define SPR_BAD_IDX (0x20 + 20)
 
+#define TILES_PER_SPRITE 2
+
 typedef struct note_t {
     UWORD xpos, ypos; 
     UBYTE typ;
-    UINT8 allocated_tiles[4];
+    UINT8 sprites[TILES_PER_SPRITE];
     struct note_t * next;
 } note_t;
 
@@ -53,8 +55,8 @@ const unsigned char digits[]   = {0x00,0x00,0x7C,0x00,0xEE,0x00,0xC6,0x00,0xC6,0
 
 const unsigned char zone_map[] = {0x1A,0x1A,0x1A,0x1A,0x1A,0x1A,0x1A,0x1A,0x1A,0x1A,0x1A,0x1A,0x1A,0x1A,0x1A,0x1A,0x1A,0x1A,0x1A,0x1A};
 
-const unsigned char ok_map[]   = {SPR_OK_IDX, SPR_OK_IDX+1, SPR_OK_IDX+2, SPR_OK_IDX+3};
-const unsigned char fail_map[] = {SPR_BAD_IDX, SPR_BAD_IDX+1, SPR_BAD_IDX+2, SPR_BAD_IDX+3};
+const unsigned char ok_map[]   = {SPR_OK_IDX, SPR_OK_IDX+2, SPR_OK_IDX+1, SPR_OK_IDX+3};
+const unsigned char fail_map[] = {SPR_BAD_IDX, SPR_BAD_IDX+2, SPR_BAD_IDX+1, SPR_BAD_IDX+3};
 
 #define MAX_FALLING_NOTES 10
 struct note_t notes[MAX_FALLING_NOTES];
@@ -65,10 +67,9 @@ void initialize_notes() {
     free_notes = notes;
     for (UBYTE i = 0; i < MAX_FALLING_NOTES; i++) {
         free_notes->ypos = 0;
-        for (UBYTE j = 0; j < 4; j++) {
-            free_notes->allocated_tiles[j] = k;
-            k++;
-        }
+        UINT8 * tmp = free_notes->sprites;
+        *tmp++ = k++;
+        *tmp = k++;
         free_notes->next = free_notes + 1;
         free_notes++;
     }
@@ -86,18 +87,17 @@ void allocate_note(UBYTE x, UBYTE y, UBYTE tile) {
         notes_root = note;
         note->xpos = x, note->ypos = y;
         note->typ = 0;
-        for (UBYTE i = 0; i < 4; i++) set_sprite_tile(note->allocated_tiles[i], tile + i);
+        UINT8 * tmp = note->sprites;
+        set_sprite_tile(*tmp, tile), tmp++;
+        set_sprite_tile(*tmp, tile + 2);
     }
 }
 
 void set_new_tiles(struct note_t * note, UBYTE tile) {
     if (!note) return;
-    UINT8 * tmp = note->allocated_tiles;
-    UINT8 t = tile;
-    set_sprite_tile(*tmp, t), tmp++, t++;
-    set_sprite_tile(*tmp, t), tmp++, t++;
-    set_sprite_tile(*tmp, t), tmp++, t++;
-    set_sprite_tile(*tmp, t);
+    UINT8 * tmp = note->sprites;
+    set_sprite_tile(*tmp, tile), tmp++;
+    set_sprite_tile(*tmp, tile + 2);
 }
 
 UBYTE fall_speed = DEF_FALL_SPEED; // 16 == 1px per frame
@@ -139,8 +139,7 @@ void main() {
     set_bkg_tiles(17, 0, 2, 2, ok_map);
     set_bkg_tiles(17, 4, 2, 2, fail_map);
 
-    for (UBYTE i = 0; i < 16u; i++) set_sprite_tile(i, 0x20u);
-    SHOW_SPRITES;
+    SPRITES_8x16, SHOW_SPRITES;
 
     __critical {
         hUGE_init(&song);
@@ -166,8 +165,8 @@ void main() {
         if (current_notes & NOTE_R) allocate_note(R_OFFSET, NOTE_Y_OFFSET, SPR_R_IDX);
 
         if (notes_root) {
-            struct note_t * tmp = notes_root, * otmp = 0;
             redraw_scores = 0;
+            struct note_t * tmp = notes_root, * otmp = 0;
             UBYTE y;
             while (tmp) {
                 tmp->ypos += fall_speed;
@@ -176,8 +175,7 @@ void main() {
                     if (y > FAIL_Y_LIMIT) {
                         tmp->typ = 1;
                         set_new_tiles(tmp, SPR_BAD_IDX);
-                        bcd_add(&miss_count, &score_inc);
-                        redraw_scores = 1;
+                        bcd_add(&miss_count, &score_inc), redraw_scores = 1;
                     } else if (y > HIT_Y_LIMIT) {
                         switch (tmp->xpos) {
                             case A_OFFSET:
@@ -195,16 +193,17 @@ void main() {
                         }
                         if (tmp->typ == 2) {
                             set_new_tiles(tmp, SPR_OK_IDX);
-                            bcd_add(&hits_count, &score_inc);
-                            redraw_scores = 1;
+                            bcd_add(&hits_count, &score_inc), redraw_scores = 1;
                         }
                     }
                 } 
+
                 if (y > SPRITE_Y_LIMIT) y = 0;
-                move_sprite(tmp->allocated_tiles[0], tmp->xpos, y);
-                move_sprite(tmp->allocated_tiles[1], tmp->xpos + 8, y);
-                move_sprite(tmp->allocated_tiles[2], tmp->xpos, y + 8);
-                move_sprite(tmp->allocated_tiles[3], tmp->xpos + 8, y + 8);
+
+                UINT8 * tmptiles = tmp->sprites;
+                move_sprite(*tmptiles, tmp->xpos, y), tmptiles++;
+                move_sprite(*tmptiles, tmp->xpos + 8, y);
+
                 if (y) {
                     otmp = tmp;
                     tmp = tmp->next;
@@ -216,6 +215,7 @@ void main() {
                 }
             }
         }
+
         if (joy_diff & joy) 
             bcd_add(&miss_count, &score_inc), redraw_scores = 1;
             
