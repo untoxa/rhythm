@@ -55,6 +55,7 @@
 @if exist %PROJ%.map del %PROJ%.map
 @if exist %PROJ%.noi del %PROJ%.noi
 @if exist %PROJ%.cdb del %PROJ%.cdb
+@if exist %PROJ%.ihx del %PROJ%.ihx
 
 @if not exist %OBJ% mkdir %OBJ%
 

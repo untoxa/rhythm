@@ -15,7 +15,8 @@
 #define SPR_BAD_IDX (0x20 + 20)
 
 typedef struct note_t {
-    UWORD xpos, ypos, typ;
+    UWORD xpos, ypos; 
+    UBYTE typ;
     UINT8 allocated_tiles[4];
     struct note_t * next;
 } note_t;
@@ -165,7 +166,7 @@ void main() {
         if (current_notes & NOTE_R) allocate_note(R_OFFSET, NOTE_Y_OFFSET, SPR_R_IDX);
 
         if (notes_root) {
-            struct note_t * tmp = notes_root->next, * otmp = notes_root;
+            struct note_t * tmp = notes_root, * otmp = 0;
             redraw_scores = 0;
             UBYTE y;
             while (tmp) {
@@ -208,10 +209,10 @@ void main() {
                     otmp = tmp;
                     tmp = tmp->next;
                 } else {
-                    otmp->next = tmp->next;
-                    tmp->next = free_notes;
-                    free_notes = tmp;
-                    tmp = otmp->next;    
+                    struct note_t * tmp2 = tmp->next; 
+                    if (otmp) otmp->next = tmp2; else notes_root = tmp2; // fix old note or move root if removing first
+                    tmp->next = free_notes, free_notes = tmp; // add deleted note to free list
+                    tmp = tmp2;    
                 }
             }
         }
