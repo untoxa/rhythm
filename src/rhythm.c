@@ -136,8 +136,8 @@ void main() {
     set_sprite_data(SPR_OK_IDX, 4, SPR_OK);
     set_sprite_data(SPR_BAD_IDX, 4, SPR_BAD);
 
-    set_bkg_tiles(17, 0, 2, 2, ok_map);
-    set_bkg_tiles(17, 4, 2, 2, fail_map);
+    set_bkg_tiles(17, 0, 2, 2, fail_map);
+    set_bkg_tiles(17, 4, 2, 2, ok_map);
 
     SPRITES_8x16, SHOW_SPRITES;
 
