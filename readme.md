@@ -6,25 +6,14 @@ This game is actually a hUGEDriver demo
 
 ## Requirements and building tips
 
-You need the latest version of GBDK-2020 (3.2 for now) and a latest version of SDCC to compile this example. Latest SDCC may be found here: http://sdcc.sourceforge.net/snap.php I suggest at least #11845
-
-Also you may need some changes to the @make.bat, because the version of GBDK I'm currently using is slightly different. If you get errors on the linking stage, change:
-
-	-g _shadow_OAM=0xC000 
-
-into:
-
-	-g .OAM=0xC000
+You need GBDK-2020 v4.0 and GNU make.
 
 ## Music
 The Music module was written by @Kabcorp. He also did some graphics. Thank you!
 
-He used this version of hUGETracker: https://github.com/untoxa/hUGEBuild/releases/tag/0.41b1
+He used this version of hUGETracker: https://github.com/untoxa/hUGEBuild/releases/latest/
 
 Original author of hUGETracker is @superdisk, here is a link to the original repo: https://github.com/superDisk/hUGETracker/
-
-Module was converted into the C source by this wonderful online tool from @Daid: https://daid.github.io/rgbds-live/tracker/index.html
-It is almost "Online hUGETracker"!
 
 ## Interaction with the game
 hUgeDriver has a feature, that is called "routines". It is actually a user code, that is called when the special effect is encountered. There is a simple way to obtain those calls in your C handlers: just declare those handlers and put them into the routines pointer array. Look into the source code to find out how to implement that in your own software.
