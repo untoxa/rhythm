@@ -1,14 +1,14 @@
 CC = ../../gbdk/bin/lcc
 CFLAGS = -Isrc/include
 RELEASE = 1
+#DEBUG = 1
 
 ifdef RELEASE
 CFLAGS += -Wf'--max-allocs-per-node 50000' -Wf'--peep-file peephole\gbz80.rul'
 endif
 
 ifdef DEBUG
-CFLAGS += -Wf--debug -Wf--nolospre -Wl-m -Wl-w -Wl-y
-LFLAGS += -Wf--debug -Wl-m -Wl-w -Wl-y -Wl-j
+CFLAGS += -Wf--debug -Wf--nolospre -Wl-m -Wl-w -Wl-y -Wl-j
 endif
 
 all:	clean rom

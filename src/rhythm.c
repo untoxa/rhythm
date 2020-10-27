@@ -111,7 +111,7 @@ BCD miss_count = MAKE_BCD(0);
 
 const BCD score_inc = MAKE_BCD(1);
 unsigned char textbuf[10];
-UBYTE redraw_scores;
+UBYTE redraw_scores = 0;
 
 void main() {
     LCDC_REG = 0xD1;
