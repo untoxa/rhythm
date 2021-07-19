@@ -1,1 +1,0 @@
-@python .\utils\noi2sym.py rhythm.noi >rhythm.sym

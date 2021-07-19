@@ -1,20 +1,20 @@
 CC = ../../gbdk/bin/lcc
-CFLAGS = -Isrc/include
+CFLAGS = -Isrc/include -Wl-j -Wm-yS -Wl-kplayer -Wl-lhUGEDriver.lib
 RELEASE = 1
 #DEBUG = 1
 
 ifdef RELEASE
-CFLAGS += -Wf'--max-allocs-per-node 50000' -Wf'--peep-file peephole\gbz80.rul'
+CFLAGS += -Wf'--max-allocs-per-node 50000'
 endif
 
 ifdef DEBUG
-CFLAGS += -Wf--debug -Wf--nolospre -Wl-m -Wl-w -Wl-y -Wl-j
+CFLAGS += -Wf--debug -Wf--nolospre -Wl-m -Wl-w -Wl-y
 endif
 
 all:	clean rom
 
 %.gb:
-	$(CC) $(CFLAGS) -o $@ src/rhythm.c src/routines.c src/song.c src/tiledata.c src/driver/hUGEDriver.obj.o
+	$(CC) $(CFLAGS) -o $@ src/*.c
 
 clean:
 	rm -rf rhythm.*
