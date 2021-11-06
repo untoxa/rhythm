@@ -1,5 +1,5 @@
-#include <gb/gb.h>
-#include <bcd.h>
+#include <gbdk/platform.h>
+#include <gbdk/bcd.h>
 
 #include "hUGEDriver.h"
 
