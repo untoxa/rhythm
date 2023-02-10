@@ -62,7 +62,7 @@ const unsigned char fail_map[] = {SPR_BAD_IDX, SPR_BAD_IDX+2, SPR_BAD_IDX+1, SPR
 struct note_t notes[MAX_FALLING_NOTES];
 struct note_t * notes_root, * free_notes;
 
-void initialize_notes() {
+void initialize_notes(void) {
     UBYTE k = 0;
     free_notes = notes;
     for (UBYTE i = 0; i < MAX_FALLING_NOTES; i++) {
@@ -113,7 +113,7 @@ const BCD score_inc = MAKE_BCD(1);
 unsigned char textbuf[10];
 UBYTE redraw_scores = 0;
 
-void main() {
+void main(void) {
     LCDC_REG = 0xD1;
     BGP_REG  = 0b11100100;
     NR52_REG = 0x80;
